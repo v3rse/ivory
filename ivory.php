@@ -1,14 +1,28 @@
 <?php
 namespace Ivory;
 
-class Ivory {
+require 'router.php';
 
-  public function run(string $message) {
-    $message_length = strlen($message);
-    header('Content-Type: text/plain');
-    header("Content-Length: $message_length");
-    http_response_code(200);
-    echo $message;
+class Ivory {
+  
+  function __construct(){
+    $this->router = new Router();
+  }
+
+  public function run() {
+    $path = '/' . explode('/', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))[2];
+
+    $handler = $this->router->match($path);
+    if (isset($handler)) {
+      $handler($_REQUEST); 
+    }else{
+      http_response_code(404);
+      echo "Route <strong>$path</strong> not found";
+    }
+  }
+
+  public function get($path, $handler) {
+    $this->router->get($path, $handler); 
   }
 
 }
