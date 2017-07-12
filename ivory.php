@@ -2,6 +2,7 @@
 namespace Ivory;
 
 require 'router.php';
+require 'response.php';
 
 class Ivory {
   
@@ -10,11 +11,16 @@ class Ivory {
   }
 
   public function run() {
-    $path = '/' . explode('/', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))[2];
+    $path_array = explode('/', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+    $path = '/' . $path_array[count($path_array) - 1]; 
+
+    $res = new Response();
+    $req = $_REQUEST; //TODO: create request wrapper
 
     $handler = $this->router->match($path);
+
     if (isset($handler)) {
-      $handler($_REQUEST); 
+      $handler($req, $res); 
     }else{
       http_response_code(404);
       echo "Route <strong>$path</strong> not found";

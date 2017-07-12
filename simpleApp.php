@@ -4,22 +4,20 @@ require 'ivory.php';
 
 $app = new Ivory\Ivory();
 
-$app->get('/morning', function($req) {
-  $message = 'Good morning';
-  $message_length = strlen($message);
-  header('Content-Type: text/plain');
-  header("Content-Length: $message_length");
-  http_response_code(200);
-  echo $message;
+$app->get('/morning', function($req, $res) {
+  $res->send('Good morning');
 });
 
-$app->get('/night', function($req) {
-  $message = 'Good night';
-  $message_length = strlen($message);
-  header('Content-Type: text/plain');
-  header("Content-Length: $message_length");
-  http_response_code(200);
-  echo $message;
+$app->get('/night', function($req, $res) {
+  $res->send('Good night');
+});
+
+$app->get('/go_night', function($req, $res){
+  $res->redirect('/simpleApp.php/night');
+});
+
+$app->get('/json_night', function($req, $res){
+  $res->json(['message' => "Good Night"]);
 });
 
 $app->run();
