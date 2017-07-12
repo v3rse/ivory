@@ -3,6 +3,7 @@ namespace Ivory;
 
 require 'router.php';
 require 'response.php';
+require 'request.php';
 
 class Ivory {
   
@@ -15,7 +16,7 @@ class Ivory {
     $path = '/' . $path_array[count($path_array) - 1]; 
 
     $res = new Response();
-    $req = $_REQUEST; //TODO: create request wrapper
+    $req = new Request($_REQUEST);
 
     $handler = $this->router->match($path);
 

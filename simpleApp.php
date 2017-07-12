@@ -5,11 +5,11 @@ require 'ivory.php';
 $app = new Ivory\Ivory();
 
 $app->get('/morning', function($req, $res) {
-  $res->send('Good morning');
+  $res->send('Good morning ' . $req->params->name);
 });
 
 $app->get('/night', function($req, $res) {
-  $res->send('Good night');
+  $res->send('Good night ' . $req->params->name);
 });
 
 $app->get('/go_night', function($req, $res){
@@ -17,7 +17,7 @@ $app->get('/go_night', function($req, $res){
 });
 
 $app->get('/json_night', function($req, $res){
-  $res->json(['message' => "Good Night"]);
+  $res->json(['message' => "Good Night", 'name' => $req->getParam('name')]);
 });
 
 $app->run();

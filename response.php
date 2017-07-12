@@ -12,8 +12,8 @@ class Response {
     echo $body;
   }
 
-  public function json($body) {
-    $body = json_encode($body);
+  public function json($body) { // TODO: MIME issues
+    $body = json_encode($body, JSON_PRETTY_PRINT);
     $body_length = strlen($body);
     header('Content-Type: application/json');
     header("Content-Length: $body_length");
