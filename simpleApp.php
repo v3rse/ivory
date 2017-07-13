@@ -8,6 +8,14 @@ $app->get('/morning', function($req, $res) {
   $res->send('Good morning ' . $req->params->name);
 });
 
+$app->get('/morning/:name', function($req, $res) {
+  $res->send('Good morning ' . $req->params->name);
+});
+
+$app->get('/doctor/:who/:laugh', function($req, $res) {
+  $res->send('The Doctor. Doctor ' . $req->params->who .' '. $req->params->laugh );
+});
+
 $app->get('/night', function($req, $res) {
   $res->send('Good night ' . $req->params->name);
 });

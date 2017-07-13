@@ -4,6 +4,7 @@ namespace Ivory;
 require 'router.php';
 require 'response.php';
 require 'request.php';
+require '/home/v3rse/.config/composer/vendor/autoload.php';
 
 class Ivory {
   
@@ -11,14 +12,17 @@ class Ivory {
     $this->router = new Router();
   }
 
+
   public function run() {
-    $path_array = explode('/', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-    $path = '/' . $path_array[count($path_array) - 1]; 
+    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+    $path_array = $this->router->extractURLPathArray($path);
+
+    $route_info = $this->router->match($path_array);
 
     $res = new Response();
-    $req = new Request($_REQUEST);
-
-    $handler = $this->router->match($path);
+    $req = !empty($route_info['url_params']) ? new Request($route_info['url_params']) : new Request($_REQUEST);
+    $handler = $route_info['handler'];
 
     if (isset($handler)) {
       $handler($req, $res); 
