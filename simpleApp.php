@@ -4,6 +4,20 @@ require 'ivory.php';
 
 $app = new Ivory\Ivory();
 
+// middleware
+
+$app->use(function($req, $res){
+  error_log(sprintf('Request Method: %s, Request Url: %s', $_SERVER['REQUEST_METHOD'] , $_SERVER['REQUEST_URI']));
+});
+
+$app->use(function($req, $res){
+  error_log('Middleware 2');
+});
+
+$app->use(function($req, $res){
+  error_log('Middleware 3');
+});
+
 $app->get('/morning', function($req, $res) {
   $res->send('Good morning ' . $req->params->name);
 });

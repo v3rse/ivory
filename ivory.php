@@ -4,12 +4,14 @@ namespace Ivory;
 require 'router.php';
 require 'response.php';
 require 'request.php';
+require 'middleware.php';
 require '/home/v3rse/.config/composer/vendor/autoload.php';
 
 class Ivory {
   
   function __construct(){
     $this->router = new Router();
+    $this->middleware = new Middleware();
   }
 
 
@@ -21,19 +23,25 @@ class Ivory {
     $route_info = $this->router->match($path_array);
 
     $res = new Response();
-    $req = !empty($route_info['url_params']) ? new Request($route_info['url_params']) : new Request($_REQUEST);
-    $handler = $route_info['handler'];
 
-    if (isset($handler)) {
-      $handler($req, $res); 
+    if (isset($route_info['handler'])) {
+      $req = !empty($route_info['url_params']) ? new Request($route_info['url_params'], $route_info['handler']) : new Request($_REQUEST, $route_info['handler']);
     }else{
-      http_response_code(404);
-      echo "Route <strong>$path</strong> not found";
-    }
+      $req = new Request($_REQUEST, function($req, $res){
+        http_response_code(404);
+        echo "Route <strong>$path</strong> not found";
+      });
+   }
+
+    $this->middleware->run($req, $res);
   }
 
   public function get($path, $handler) {
     $this->router->get($path, $handler); 
+  }
+
+  public function use($handler) {
+    $this->middleware->use($handler);
   }
 
 }
